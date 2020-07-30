@@ -1,0 +1,15 @@
+---
+- name: Deploy ELK using Docker Swarm
+  hosts: docker-nodes
+  become: yes
+  vars:
+    ansible_user: ansible
+  tasks:
+  - name: Deploy ELK from a compose file
+    docker_stack:
+      state: present
+      name: logging
+      compose:
+        - /home/ansible/secondphasefinalproject/logging/docker-compose.yml
+  - name: Increase vm.max_map_count on elasticsearch nodes
+    shell: sysctl -w vm.max_map_count=262144
